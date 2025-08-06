@@ -1,0 +1,179 @@
+Perfeito, Hélio. Com base no que você descreveu, aqui está um escopo inicial e funcional para seu sistema de ordens de serviço para gráfica, com Angular (frontend) e NestJS (backend). Ele está dividido por módulos, componentes, rotas e funcionalidades principais.
+
+🔧 NOME DO SISTEMA (sugestão):
+GrafiOS (Gráfica Ordem de Serviço)
+
+🔍 Escopo Funcional Inicial
+1. Autenticação
+Tela de Login
+
+Campos: Usuário, Senha
+
+Autenticação via JWT
+
+Sem tela de cadastro
+
+Usuários inseridos manualmente via banco
+
+2. Dashboard Principal (Pós-login)
+Boas-vindas ao usuário
+
+Duas opções:
+
+[ ] Ver Ordens de Serviço (OS) em andamento
+
+[ ] Criar Nova OS
+
+3. Módulo: Criar Nova OS
+Componentes da tela:
+
+Combo de Tipo de Serviço (obrigatório)
+(com valor/m² fixo no sistema)
+
+ts
+Copiar
+Editar
+[
+  { nome: 'Adesivos com corte', valor: 60 },
+  { nome: 'Adesivos sem corte', valor: 50 },
+  { nome: 'Banner Tubo', valor: 60 },
+  { nome: 'Banner Ilhos', valor: 70 },
+  { nome: 'Papel fotográfico', valor: 120 },
+  { nome: 'Plotagem (A0)', valor: 50 },
+  { nome: 'Plotagem (A1)', valor: 30 },
+  { nome: 'Plotagem (A2)', valor: 20 },
+  { nome: 'Plotagem (A3)', valor: 15 },
+]
+Campo: Dimensões (largura x altura) → cálculo automático de m²
+
+Combo: Arte
+
+Arte do cliente → R$ 0,00
+
+Arte nova → campo para digitar valor da arte
+
+Campo adicional personalizado (até 200 caracteres)
+
+Campo de texto
+
+Campo de valor em reais ao lado
+
+Botão “Adicionar serviço”
+
+Adiciona o serviço a uma tabela de serviços da OS
+
+Mostra subtotal por linha + total acumulado abaixo
+
+Botão "Enviar OS"
+
+Envia a OS com todos os serviços listados
+
+4. Módulo: Ver OS em andamento
+Tabela com colunas:
+
+Nº da OS
+
+Data
+
+Cliente
+
+Tipo(s) de Serviço
+
+Valor total
+
+Status (Em produção, Pronta, Entregue)
+
+Botões: [Editar] [Excluir] [Avançar etapa]
+
+Modal para alterar o status da OS
+
+🗃️ Back-end - NestJS
+ENTIDADES:
+🔸 Usuário
+ts
+Copiar
+Editar
+id: number
+nome: string
+login: string
+senha: string (criptografada)
+🔸 OrdemDeServico
+ts
+Copiar
+Editar
+id: number
+cliente: string
+dataCriacao: Date
+status: 'Em produção' | 'Pronta' | 'Entregue'
+itens: OrdemServicoItem[]
+valorTotal: number
+arteTipo: 'Arte do Cliente' | 'Arte Nova'
+valorArte: number
+valorAdicional: number
+descricaoAdicional: string
+🔸 OrdemServicoItem
+ts
+Copiar
+Editar
+id: number
+tipoServico: string
+precoPorMetro: number
+largura: number
+altura: number
+area: number
+subtotal: number
+📐 Estrutura Angular (frontend)
+lua
+Copiar
+Editar
+src/
+├── app/
+│   ├── auth/
+│   │   └── login.component.ts
+│   ├── dashboard/
+│   │   ├── dashboard.component.ts
+│   │   ├── criar-os/
+│   │   └── ver-os/
+│   ├── shared/
+│   │   └── services/
+│   │       └── os.service.ts
+│   └── app-routing.module.ts
+🔒 Segurança
+JWT token com guardas de rota para proteger rotas após login.
+
+Criptografia de senha no backend com bcrypt.
+
+🧪 Tecnologias Complementares (sugestão)
+Banco de dados: PostgreSQL (ou SQLite para testes locais)
+
+ORM: TypeORM
+
+NestJS modules: AuthModule, OsModule, UserModule
+
+Angular libs: Angular Material para tabelas/modais/layout
+
+
+📋 Escopo Técnico com Versões
+🧱 Stack Tecnológica
+Camada	Tecnologia	Versão recomendada
+Frontend	Angular	17.x (mais atual e estável em 2025)
+Angular Material	17.x
+TypeScript	5.x
+Node.js (CLI)	20.x
+Backend	NestJS	10.x
+TypeORM	0.3.x
+Node.js	20.x
+JWT (@nestjs/jwt)	10.x
+Bcrypt (bcrypt)	5.x
+Banco	PostgreSQL	15.x (ou SQLite para testes: 3.x)
+
+✅ Motivos para essas versões
+Angular 17 traz melhorias de performance e usa o novo builder baseado em Vite.
+
+NestJS 10 é a versão mais madura, com melhor suporte a módulos standalone e middlewares otimizados.
+
+TypeORM 0.3+ tem sintaxe atualizada e melhor integração com NestJS.
+
+Node 20 é a versão LTS estável até 2026.
+
+PostgreSQL 15 tem melhorias de performance e é amplamente usado em produção.
